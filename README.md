@@ -26,7 +26,7 @@ accepts 20 characters, take any 20 in a row.
 
 ## Install (Linux)
 
-Needs Go 1.24 or newer, a C compiler, and the usual OpenGL/X11/Wayland
+Needs Go 1.26 or newer, a C compiler, and the usual OpenGL/X11/Wayland
 development libraries (on Arch: `go gcc`; on Debian/Ubuntu:
 `golang gcc libgl1-mesa-dev xorg-dev libwayland-dev libxkbcommon-dev`).
 

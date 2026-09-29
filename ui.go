@@ -16,8 +16,11 @@ import (
 	"github.com/rclinux/prime-passwords/internal/gen"
 )
 
-// clipboardClearAfter is a variable so tests can shorten it.
-var clipboardClearAfter = 30 * time.Second
+const clipboardClearAfter = 30 * time.Second
+
+// afterFunc schedules the clipboard clear. Tests replace it so they can run
+// the clear on their own goroutine.
+var afterFunc = func(d time.Duration, f func()) { time.AfterFunc(d, f) }
 
 const aboutText = `## How these passwords are made
 
@@ -164,7 +167,7 @@ func (u *mainUI) copy(s string) {
 	cb := u.app.Clipboard()
 	cb.SetContent(s)
 	u.status.SetText(fmt.Sprintf("Copied — clipboard clears in %d seconds", int(clipboardClearAfter.Seconds())))
-	time.AfterFunc(clipboardClearAfter, func() {
+	afterFunc(clipboardClearAfter, func() {
 		fyne.Do(func() {
 			if cb.Content() == s {
 				cb.SetContent("")

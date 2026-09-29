@@ -25,6 +25,8 @@ const version = "0.1.0"
 var iconPNG []byte
 
 func main() {
+	harden()
+
 	cli := flag.Bool("cli", false, "print all three passwords and exit")
 	hex := flag.Bool("hex", false, "print 64 hex characters and exit")
 	ascii := flag.Bool("ascii", false, "print 63 printable ASCII characters and exit")

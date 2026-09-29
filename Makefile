@@ -2,8 +2,9 @@ PREFIX  ?= $(HOME)/.local
 BINDIR  := $(PREFIX)/bin
 APPDIR  := $(PREFIX)/share/applications
 ICONDIR := $(PREFIX)/share/icons/hicolor
+GOBIN   ?= $(shell go env GOPATH)/bin
 
-.PHONY: build test install uninstall clean
+.PHONY: build test audit install uninstall clean
 
 build:
 	go build -tags wayland -trimpath -ldflags "-s -w" -o prime-passwords .
@@ -11,6 +12,17 @@ build:
 test:
 	go vet ./...
 	go test ./...
+
+# Needs: go install golang.org/x/vuln/cmd/govulncheck@latest
+#        go install github.com/securego/gosec/v2/cmd/gosec@latest
+#        go install honnef.co/go/tools/cmd/staticcheck@latest
+audit:
+	go mod verify
+	go vet ./...
+	$(GOBIN)/staticcheck ./...
+	$(GOBIN)/gosec -quiet ./...
+	$(GOBIN)/govulncheck ./...
+	go test -race -count=1 ./...
 
 install: build
 	install -Dm755 prime-passwords $(BINDIR)/prime-passwords

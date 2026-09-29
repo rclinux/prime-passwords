@@ -53,10 +53,22 @@ func TestRefreshKeys(t *testing.T) {
 	}
 }
 
-func TestCopyAndClear(t *testing.T) {
-	clipboardClearAfter = 50 * time.Millisecond
-	t.Cleanup(func() { clipboardClearAfter = 30 * time.Second })
+// captureClears replaces afterFunc so scheduled clears run only when the
+// test calls them.
+func captureClears(t *testing.T) *[]func() {
+	var pending []func()
+	afterFunc = func(d time.Duration, f func()) {
+		if d != 30*time.Second {
+			t.Errorf("clear delay = %v, want 30s", d)
+		}
+		pending = append(pending, f)
+	}
+	t.Cleanup(func() { afterFunc = func(d time.Duration, f func()) { time.AfterFunc(d, f) } })
+	return &pending
+}
 
+func TestCopyAndClear(t *testing.T) {
+	pending := captureClears(t)
 	u := newTestUI(t)
 	cb := u.app.Clipboard()
 	for _, r := range u.rows {
@@ -65,21 +77,24 @@ func TestCopyAndClear(t *testing.T) {
 			t.Fatalf("clipboard = %q, want %q", got, r.value)
 		}
 	}
-	time.Sleep(200 * time.Millisecond)
+	// Only the last copy is still on the clipboard, so only its clear acts.
+	for _, f := range *pending {
+		f()
+	}
 	if got := cb.Content(); got != "" {
 		t.Errorf("clipboard not cleared: %q", got)
 	}
 }
 
 func TestCopyDoesNotClearOtherContent(t *testing.T) {
-	clipboardClearAfter = 50 * time.Millisecond
-	t.Cleanup(func() { clipboardClearAfter = 30 * time.Second })
-
+	pending := captureClears(t)
 	u := newTestUI(t)
 	cb := u.app.Clipboard()
 	test.Tap(u.rows[0].copyBtn)
 	cb.SetContent("something the user copied later")
-	time.Sleep(200 * time.Millisecond)
+	for _, f := range *pending {
+		f()
+	}
 	if got := cb.Content(); got != "something the user copied later" {
 		t.Errorf("clipboard overwritten: %q", got)
 	}
