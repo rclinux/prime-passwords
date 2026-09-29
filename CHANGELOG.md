@@ -2,6 +2,21 @@
 
 All notable changes are listed here. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+- Linux download package (`make linux-release`) with `install.sh`
+  (per-user install, `--uninstall`), no root or Go needed.
+- GitHub Actions: CI runs `make audit`; version tags build the Linux and
+  Windows downloads plus SHA256SUMS into a draft release.
+- Full README: screenshots, Windows and Linux guides, usage, FAQ,
+  troubleshooting, download verification.
+- `SCREENSHOTS=1 go test -run TestScreenshots .` renders README images.
+
+### Changed
+- `make build`/`make install` default to a build that runs on both X11 and
+  Wayland; `TAGS=wayland` gives a native Wayland window.
+
 ## [0.1.0] - 2026-09-29
 
 ### Security

@@ -5,10 +5,27 @@ ICONDIR := $(PREFIX)/share/icons/hicolor
 GOBIN   ?= $(shell go env GOPATH)/bin
 VERSION := $(shell sed -n 's/^const version = "\(.*\)"/\1/p' main.go)
 
-.PHONY: build windows test audit install uninstall clean
+.PHONY: build linux-release windows test audit install uninstall clean
+
+# Default build runs on X11 and Wayland (via XWayland).
+# For a native Wayland window: make install TAGS=wayland
+TAGS ?=
 
 build:
-	go build -tags wayland -trimpath -ldflags "-s -w" -o prime-passwords .
+	go build -tags "$(TAGS)" -trimpath -ldflags "-s -w" -o prime-passwords .
+
+# Linux download: binary + icon + launcher entry + install.sh, as .tar.gz.
+# Built without -tags wayland so it runs on both X11 and Wayland desktops.
+LINUXPKG := prime-passwords-$(VERSION)-linux-amd64
+linux-release:
+	rm -rf dist/$(LINUXPKG)
+	mkdir -p dist/$(LINUXPKG)
+	go build -trimpath -ldflags "-s -w" -o dist/$(LINUXPKG)/prime-passwords .
+	cp assets/icon.png dist/$(LINUXPKG)/prime-passwords.png
+	cp assets/icon.svg dist/$(LINUXPKG)/prime-passwords.svg
+	cp packaging/prime-passwords.desktop packaging/install.sh README.md LICENSE SECURITY.md dist/$(LINUXPKG)/
+	tar -C dist -czf dist/$(LINUXPKG).tar.gz $(LINUXPKG)
+	rm -rf dist/$(LINUXPKG)
 
 # Windows .exe with embedded icon, cross-compiled from Linux.
 # Needs mingw-w64-gcc and: go install fyne.io/tools/cmd/fyne@latest

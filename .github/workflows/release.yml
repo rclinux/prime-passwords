@@ -1,0 +1,71 @@
+# Builds the downloads when a version tag (v1.2.3) is pushed and attaches
+# them to a DRAFT GitHub release. Review the draft, then press Publish.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    # Oldest supported Ubuntu, so the binary runs on glibc 2.35 and newer.
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+      - run: sudo apt-get update && sudo apt-get install -y gcc libgl1-mesa-dev xorg-dev libwayland-dev libxkbcommon-dev
+      - run: make test
+      - run: make linux-release
+      - uses: actions/upload-artifact@v7
+        with:
+          name: linux
+          path: dist/*.tar.gz
+
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+      - run: go test ./...
+      - run: go install fyne.io/tools/cmd/fyne@latest
+      - name: Build .exe with embedded icon
+        run: |
+          version=$(sed -n 's/^const version = "\(.*\)"/\1/p' main.go)
+          "$(go env GOPATH)/bin/fyne" package --os windows --release
+          mkdir -p dist
+          mv "Prime Passwords.exe" "dist/prime-passwords-${version}-windows-amd64.exe"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: windows
+          path: dist/*.exe
+
+  release:
+    needs: [linux, windows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Checksums
+        run: cd dist && sha256sum * > SHA256SUMS && cat SHA256SUMS
+      - name: Create draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/* \
+            --repo "$GITHUB_REPOSITORY" --draft \
+            --title "Prime Passwords ${GITHUB_REF_NAME#v}" \
+            --notes "See CHANGELOG.md for what changed. Verify downloads with SHA256SUMS."
