@@ -1,0 +1,6 @@
+[Details]
+  Icon = "assets/icon.png"
+  Name = "Prime Passwords"
+  ID = "io.github.rclinux.primepasswords"
+  Version = "0.1.0"
+  Build = 1
