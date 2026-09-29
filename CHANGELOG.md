@@ -2,23 +2,6 @@
 
 All notable changes are listed here. Versions follow [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
-
-### Added
-- Linux download package (`make linux-release`) with `install.sh`
-  (per-user install, `--uninstall`), no root or Go needed.
-- GitHub Actions: CI runs `make audit`; version tags build the Linux and
-  Windows downloads plus SHA256SUMS into a draft release.
-- Full README: screenshots, Windows and Linux guides, usage, FAQ,
-  troubleshooting, download verification.
-- `SCREENSHOTS=1 go test -run TestScreenshots .` renders README images.
-
-### Changed
-- Window subtitle and app-menu description shortened to
-  "Cryptographically secure passwords".
-- `make build`/`make install` default to a build that runs on both X11 and
-  Wayland; `TAGS=wayland` gives a native Wayland window.
-
 ## [0.1.0] - 2026-09-29
 
 ### Security
@@ -42,3 +25,13 @@ All notable changes are listed here. Versions follow [Semantic Versioning](https
   race-detector tests. SECURITY.md describes what is and is not protected.
 - Tests for lengths, character sets, even character odds (chi-square) and
   the window's buttons.
+- Linux download package (`make linux-release`) with `install.sh`
+  (per-user install, `--uninstall`), no root or Go needed.
+- GitHub Actions: CI runs `make audit`; version tags build the Linux and
+  Windows downloads plus SHA256SUMS into a draft release.
+- Full README: screenshots, Windows and Linux guides, usage, FAQ,
+  troubleshooting, download verification.
+- `SCREENSHOTS=1 go test -run TestScreenshots .` renders README images.
+- `make build`/`make install` produce a build that runs on both X11 and
+  Wayland; `TAGS=wayland` gives a native Wayland window.
+
