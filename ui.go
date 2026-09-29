@@ -124,7 +124,7 @@ func newMainUI(a fyne.App, w fyne.Window) *mainUI {
 	logo.SetMinSize(fyne.NewSize(56, 56))
 	title := widget.NewLabelWithStyle("Prime Passwords", fyne.TextAlignLeading, fyne.TextStyle{Bold: true})
 	title.SizeName = theme.SizeNameHeadingText
-	subtitle := widget.NewLabel("Cryptographically secure passwords, made on this computer.")
+	subtitle := widget.NewLabel("Cryptographically secure passwords")
 	header := container.NewBorder(nil, nil, logo, nil, container.NewVBox(title, subtitle))
 
 	buttons := container.NewBorder(nil, nil, u.aboutBtn, u.refreshBtn, u.status)

@@ -14,6 +14,7 @@ All notable changes are listed here. Versions follow [Semantic Versioning](https
 - `SCREENSHOTS=1 go test -run TestScreenshots .` renders README images.
 
 ### Changed
+- Window subtitle shortened to "Cryptographically secure passwords".
 - `make build`/`make install` default to a build that runs on both X11 and
   Wayland; `TAGS=wayland` gives a native Wayland window.
 
