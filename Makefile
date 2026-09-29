@@ -13,8 +13,10 @@ build:
 # Windows .exe with embedded icon, cross-compiled from Linux.
 # Needs mingw-w64-gcc and: go install fyne.io/tools/cmd/fyne@latest
 windows:
+	cp FyneApp.toml FyneApp.toml.bak   # fyne package bumps Build; keep tree clean
 	CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ \
-		$(GOBIN)/fyne package --os windows --release
+		$(GOBIN)/fyne package --os windows --release; \
+		status=$$?; mv FyneApp.toml.bak FyneApp.toml; exit $$status
 	mkdir -p dist
 	mv "Prime Passwords.exe" dist/prime-passwords-$(VERSION)-windows-amd64.exe
 
