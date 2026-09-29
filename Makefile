@@ -3,11 +3,20 @@ BINDIR  := $(PREFIX)/bin
 APPDIR  := $(PREFIX)/share/applications
 ICONDIR := $(PREFIX)/share/icons/hicolor
 GOBIN   ?= $(shell go env GOPATH)/bin
+VERSION := $(shell sed -n 's/^const version = "\(.*\)"/\1/p' main.go)
 
-.PHONY: build test audit install uninstall clean
+.PHONY: build windows test audit install uninstall clean
 
 build:
 	go build -tags wayland -trimpath -ldflags "-s -w" -o prime-passwords .
+
+# Windows .exe with embedded icon, cross-compiled from Linux.
+# Needs mingw-w64-gcc and: go install fyne.io/tools/cmd/fyne@latest
+windows:
+	CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ \
+		$(GOBIN)/fyne package --os windows --release
+	mkdir -p dist
+	mv "Prime Passwords.exe" dist/prime-passwords-$(VERSION)-windows-amd64.exe
 
 test:
 	go vet ./...
@@ -39,4 +48,4 @@ uninstall:
 	      $(ICONDIR)/scalable/apps/prime-passwords.svg
 
 clean:
-	rm -f prime-passwords
+	rm -rf prime-passwords dist

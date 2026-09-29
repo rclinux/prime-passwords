@@ -39,6 +39,17 @@ make install      # installs to ~/.local, adds a launcher icon
 Then open **Prime Passwords** from your app launcher. `make uninstall`
 removes it.
 
+## Windows
+
+Download `prime-passwords-<version>-windows-amd64.exe` from the Releases
+page and double-click it. No installer is needed. Windows 10 and 11 (64-bit).
+
+Windows may show a SmartScreen "Windows protected your PC" warning because
+the program is not code-signed. Click **More info**, then **Run anyway**.
+
+To build it yourself from Linux: install the `mingw-w64-gcc` cross-compiler
+and `go install fyne.io/tools/cmd/fyne@latest`, then run `make windows`.
+
 ## Terminal use
 
 ```sh

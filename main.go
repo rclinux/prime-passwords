@@ -26,6 +26,9 @@ var iconPNG []byte
 
 func main() {
 	harden()
+	if len(os.Args) > 1 {
+		attachConsole()
+	}
 
 	cli := flag.Bool("cli", false, "print all three passwords and exit")
 	hex := flag.Bool("hex", false, "print 64 hex characters and exit")

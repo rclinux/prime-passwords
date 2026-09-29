@@ -2,7 +2,7 @@
 
 All notable changes are listed here. Versions follow [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.1.0] - 2026-09-29
 
 ### Security
 - Updated golang.org/x/image to v0.46.0 and golang.org/x/net to v0.59.0 to
@@ -16,6 +16,8 @@ All notable changes are listed here. Versions follow [Semantic Versioning](https
   was copied since.
 - About page explaining how the passwords are made and which to use.
 - Terminal mode: `--cli`, `--hex`, `--ascii`, `--alnum`, `--version`.
+- Windows build (`make windows`): single .exe with embedded icon; terminal
+  flags print to the console they were started from.
 - Padlock app icon, desktop launcher entry, `make install` / `make uninstall`.
 - Linux hardening: process is marked non-dumpable, so passwords never land
   in a crash dump and other same-user programs cannot read its memory.
