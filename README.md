@@ -122,10 +122,6 @@ to download the "Source code" files unless you want to build it yourself.
 > Run anyway. That warning is expected, because the program isn't
 > code-signed.**
 
-<p align="center">
-  <img src="docs/screenshots/windows-smartscreen.png" width="480" alt="Windows SmartScreen box with More info and Run anyway">
-</p>
-
 Why this happens: Windows shows this box for any program that has not been
 signed with a paid code-signing certificate and is not yet widely
 downloaded. It does **not** mean a problem was found. You only see it the
