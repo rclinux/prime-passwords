@@ -19,7 +19,7 @@ import (
 	"github.com/rclinux/prime-passwords/internal/gen"
 )
 
-const version = "0.1.0"
+const version = "0.1.1"
 
 //go:embed assets/icon.png
 var iconPNG []byte

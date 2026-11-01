@@ -2,6 +2,17 @@
 
 All notable changes are listed here. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.1.1] - 2026-11-01
+
+### Security
+- Updated golang.org/x/net to v0.62.0 (with x/sys v0.49.0 and x/text v0.43.0)
+  to remove seven known vulnerabilities in Fyne's dependencies. govulncheck
+  found none of them reachable from Prime Passwords' code.
+
+### Changed
+- Updated Fyne to v2.8.2 (bug-fix release) and its go-text, oksvg and GLFW
+  dependencies.
+
 ## [0.1.0] - 2026-09-29
 
 ### Security
